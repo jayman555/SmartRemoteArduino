@@ -4,12 +4,17 @@
 #include <MotorMovement.h>
 
 //DEFINES/CONSTANTS
-#define SonarTriggerPin  14
-#define SonarEchoPin     15
-#define SonarMaxDistance 255
+#define SonarTriggerPin   14
+#define SonarEchoPin      15
+#define SonarMaxDistance  255
+
+#define PinLeftForwards   10
+#define PinRightForwards  11
+#define PinLeftReverse    12
+#define PinRightReverse   13
 
 //OBJECTS
-AsymmetricMotorPair engines(10, 11, 12, 13, 9, 8);
+AsymmetricMotorPair engines(PinLeftForwards, PinRightForwards, PinLeftReverse, PinRightReverse);
 NewPing sonarObject(SonarTriggerPin, SonarEchoPin, SonarMaxDistance);
 I2CLaser laserObject;
 
