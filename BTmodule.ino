@@ -16,7 +16,7 @@
 //OBJECTS
 AsymmetricMotorPair engines(PinLeftForwards, PinRightForwards, PinLeftReverse, PinRightReverse);
 NewPing sonarObject(SonarTriggerPin, SonarEchoPin, SonarMaxDistance);
-I2CLaser laserObject;
+//I2CLaser laserObject(0);
 
 //GLOBAL VARIABLES
 command currentCommand = STOP;
@@ -29,7 +29,7 @@ void setup()
 
 void loop()
 {
-    //query the serial interface to check if there are bytes to read
+	//query the serial interface to check if there are bytes to read
 	if (Serial.available())
 	{
 		currentCommand = convertToCommand(Serial.read());
@@ -38,14 +38,16 @@ void loop()
 	switch (currentCommand)
 	{
 	case DRIVEFORWARDS:
-		if (sonarObject.convert_cm(
-			sonarObject.ping_median()) > 20)         { engines.driveForward(20, 20); }
-		else								         { currentCommand = STOP;        }
-		break;
+		if (sonarObject.convert_cm(sonarObject.ping_median()) > 20)         
+		{
+			engines.driveForward(20, 20); 
+			break;
+		}
+		else { currentCommand = STOP; }
+		
 	case DRIVEBACKWARDS:
-		if (laserObject.getLaserDistance() > 20)     { engines.driveBackward(20, 20); }
-		else						                 { currentCommand = STOP;         }
-		break;
+		 engines.driveBackward(20, 20); 
+		 break;
 	case TURNLEFT:
 		engines.turnLeft(20);
 		break;
@@ -61,7 +63,7 @@ void loop()
 	case STOP:
 		engines.stop();
 		break;
-	default: 
+	default:
 		//as backup 
 		engines.stop();
 		break;
@@ -83,7 +85,7 @@ command convertToCommand(char incomingChar)
 	case '4':
 		return TURNLEFT;
 		break;
-	case '6': 
+	case '6':
 		return TURNRIGHT;
 		break;
 	case '8':
