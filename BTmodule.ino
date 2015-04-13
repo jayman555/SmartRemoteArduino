@@ -13,10 +13,15 @@
 #define PinLeftReverse    12
 #define PinRightReverse   13
 
+#define LaserTriggerPin   7
+#define LaserEchoPin      8
+#define LaserPELine       9
+
 //OBJECTS
 AsymmetricMotorPair engines(PinLeftForwards, PinRightForwards, PinLeftReverse, PinRightReverse);
 NewPing sonarObject(SonarTriggerPin, SonarEchoPin, SonarMaxDistance);
 //I2CLaser laserObject(0);
+PWMLaser laserObject(LaserTriggerPin, LaserEchoPin, LaserPELine);
 
 //GLOBAL VARIABLES
 command currentCommand = STOP;
@@ -44,10 +49,13 @@ void loop()
 			break;
 		}
 		else { currentCommand = STOP; }
-		
 	case DRIVEBACKWARDS:
-		 engines.driveBackward(20, 20); 
-		 break;
+		if (laserObject.getLaserDistanceSafe() > 20)
+		{
+			engines.driveBackward(20, 20);
+			break;
+		}
+		else { currentCommand = STOP; }
 	case TURNLEFT:
 		engines.turnLeft(20);
 		break;
